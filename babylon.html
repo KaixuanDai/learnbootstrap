@@ -6,6 +6,8 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Document</title>
     <script src="node_modules/babylonjs/babylon.js"></script>
+    <script src="node_modules/babylonjs/Oimo.js"></script>//物理引擎
+
 </head>
 <style>
     html,body{
@@ -32,7 +34,8 @@
         var createScene=function(){
            
             var scene=new BABYLON.Scene(engine);
-
+        
+            // 众多相机类型里3种常用的是, ArcRotateCamera(弧形旋转相机), FreeCamera(自由相机), 和 TouchCamera(触控相机).  在Babylon.js里有许多种可用的相机, 但是这3种是最常见的.  一个场景里可以编码任意多个相机, 但是只有其中一个能是'激活的相机'  
             var camera=new BABYLON.FreeCamera('camera1',new BABYLON.Vector3(0,5,-10),scene);
 
             camera.setTarget(BABYLON.Vector3.Zero());
@@ -40,7 +43,8 @@
             // 使得我们可以控制相机拍摄角度，和three.js中的OrbitsControl效果类似，但简单得多
             camera.attachControl(canvas, false);
 
-            // 创建一个半球形光源,朝向为天空
+            // 创建一个半球形光源,朝向为天空 
+            //在Babylon.js里有4种基础类型的光源.  它们是 PointLight(点光光源), SpotLight(聚光光源), DirectionalLight(平行光光源), 和 HemisphericLight(半球光源).
             var light = new BABYLON.HemisphericLight('light1', new BABYLON.Vector3(0,1,0), scene);
 
             // 创建一个内置的“球”体；其构造函数的参数：名称、宽度、深度、精度，场景，其中精度表示表面细分数。
@@ -50,10 +54,20 @@
             sphere.position.y = 1;
 
             // 创建一个内置的“地面”形状；其构造函数的5个参数和球体一样
-            var ground = BABYLON.Mesh.CreateGround('ground1', 5, 5, 2, scene);
+            // var ground = BABYLON.Mesh.CreateGround('ground1', 10,10, 2, scene);
             
-            var groundMaterial =new BABYLON
-            return scene;
+           
+            var groundMaterial = new BABYLON.StandardMaterial("groundMaterial", scene);
+            
+            groundMaterial.diffuseColor = new BABYLON.Color3(0.1, 0.3, 0.5);
+            
+            var ground = BABYLON.Mesh.CreateGround("ground", 10, 10, 3, scene);
+            
+            ground.material = groundMaterial;
+            
+            ground.receiveShadows = true;
+
+           return scene;
 
         }
 
