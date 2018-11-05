@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src="node_modules/babylonjs/babylon.js"></script>
+</head>
+<style>
+    html,body{
+        overflow: hidden;
+        width: 100%;
+        height: 100%;
+        margin: 0;
+        padding: 0;
+    }
+    #renderCanvas{
+        width   : 100%;
+        height  : 100%;
+        touch-action: none;
+    }
+</style>
+<body>
+    <canvas id="renderCanvas"></canvas><!--webgl借助canvas作为3D渲染的容器-->
+<script>
+    window.addEventListener('DOMContentLoaded',function(){
+        var canvas=document.getElementById('renderCanvas');
+        
+        var engine=new BABYLON.Engine(canvas,true);//渲染引擎
+
+        var createScene=function(){
+           
+            var scene=new BABYLON.Scene(engine);
+
+            var camera=new BABYLON.FreeCamera('camera1',new BABYLON.Vector3(0,5,-10),scene);
+
+            camera.setTarget(BABYLON.Vector3.Zero());
+ 
+            // 使得我们可以控制相机拍摄角度，和three.js中的OrbitsControl效果类似，但简单得多
+            camera.attachControl(canvas, false);
+
+            // 创建一个半球形光源,朝向为天空
+            var light = new BABYLON.HemisphericLight('light1', new BABYLON.Vector3(0,1,0), scene);
+
+            // 创建一个内置的“球”体；其构造函数的参数：名称、宽度、深度、精度，场景，其中精度表示表面细分数。
+            var sphere = BABYLON.Mesh.CreateSphere('sphere1', 16, 2, scene);
+
+            // 设置球体位置，使其位于平面之上
+            sphere.position.y = 1;
+
+            // 创建一个内置的“地面”形状；其构造函数的5个参数和球体一样
+            var ground = BABYLON.Mesh.CreateGround('ground1', 5, 5, 2, scene);
+            
+            var groundMaterial =new BABYLON
+            return scene;
+
+        }
+
+        var scene = createScene();
+
+        engine.runRenderLoop(function() {
+            scene.render();
+});
+
+    })
+
+
+</script>
+</body>
+</html>
