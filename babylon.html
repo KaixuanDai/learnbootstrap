@@ -4,82 +4,64 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Document</title>
-    <script src="node_modules/babylonjs/babylon.js"></script>
-    <script src="node_modules/babylonjs/Oimo.js"></script>//物理引擎
+    <title>基础场景</title>
 
-</head>
-<style>
-    html,body{
-        overflow: hidden;
-        width: 100%;
-        height: 100%;
-        margin: 0;
-        padding: 0;
-    }
-    #renderCanvas{
-        width   : 100%;
-        height  : 100%;
-        touch-action: none;
-    }
-</style>
-<body>
-    <canvas id="renderCanvas"></canvas><!--webgl借助canvas作为3D渲染的容器-->
-<script>
-    window.addEventListener('DOMContentLoaded',function(){
-        var canvas=document.getElementById('renderCanvas');
-        
-        var engine=new BABYLON.Engine(canvas,true);//渲染引擎
-
-        var createScene=function(){
-           
-            var scene=new BABYLON.Scene(engine);
-        
-            // 众多相机类型里3种常用的是, ArcRotateCamera(弧形旋转相机), FreeCamera(自由相机), 和 TouchCamera(触控相机).  在Babylon.js里有许多种可用的相机, 但是这3种是最常见的.  一个场景里可以编码任意多个相机, 但是只有其中一个能是'激活的相机'  
-            var camera=new BABYLON.FreeCamera('camera1',new BABYLON.Vector3(0,5,-10),scene);
-
-            camera.setTarget(BABYLON.Vector3.Zero());
- 
-            // 使得我们可以控制相机拍摄角度，和three.js中的OrbitsControl效果类似，但简单得多
-            camera.attachControl(canvas, false);
-
-            // 创建一个半球形光源,朝向为天空 
-            //在Babylon.js里有4种基础类型的光源.  它们是 PointLight(点光光源), SpotLight(聚光光源), DirectionalLight(平行光光源), 和 HemisphericLight(半球光源).
-            var light = new BABYLON.HemisphericLight('light1', new BABYLON.Vector3(0,1,0), scene);
-
-            // 创建一个内置的“球”体；其构造函数的参数：名称、宽度、深度、精度，场景，其中精度表示表面细分数。
-            var sphere = BABYLON.Mesh.CreateSphere('sphere1', 16, 2, scene);
-
-            // 设置球体位置，使其位于平面之上
-            sphere.position.y = 1;
-
-            // 创建一个内置的“地面”形状；其构造函数的5个参数和球体一样
-            // var ground = BABYLON.Mesh.CreateGround('ground1', 10,10, 2, scene);
-            
-           
-            var groundMaterial = new BABYLON.StandardMaterial("groundMaterial", scene);
-            
-            groundMaterial.diffuseColor = new BABYLON.Color3(0.1, 0.3, 0.5);
-            
-            var ground = BABYLON.Mesh.CreateGround("ground", 10, 10, 3, scene);
-            
-            ground.material = groundMaterial;
-            
-            ground.receiveShadows = true;
-
-           return scene;
-
+    <style>
+        html,body{
+            overflow: hidden;
+            width:100%;
+            height: 100%;
+            margin:0;
+            padding: 0;
         }
+        #renderCanvas{
+            width:100%;
+            height: 100%;
+            touch-action: none;
+        }
+    </style>
+    <script src="node_modules/babylonjs/babylon.js"></script>
+    <script src="node_modules/babylonjs/Oimo.js"></script>
+</head>
+<body>
 
-        var scene = createScene();
+    <canvas id="renderCanvas"></canvas>
+    <script>
+        var canvas=document.getElementById("renderCanvas");
+        var engine =new BABYLON.Engine(canvas,true);
+        
+        var createScene = function(){
+            var scene = new BABYLON.Scene(engine);//场景对象
+            scene.clearColor=new BABYLON.Color3(0,1,1);//背景色
+            var camera=new BABYLON.FreeCamera("camera1",new BABYLON.Vector3(0,5,-10),scene);//创建和放置自由相机
+            camera.setTarget(BABYLON.Vector3.Zero());//将相机朝向对准场景原点
+            camera.attachControl(canvas,false);//将相机附加到画布上
 
-        engine.runRenderLoop(function() {
+            var light=new BABYLON.HemisphericLight("light1",new BABYLON.Vector3(0,1,0));//创建平行光源
+            light.intensity=0.5;//将光源光线设置为昏暗
+
+            var sphere=BABYLON.Mesh.CreateSphere("sphere1",16,2,scene);//添加一个球，名称，细分度，大小，场景
+            sphere.position.y=1;//将球上移一半高度
+
+            var ground = BABYLON.Mesh.CreateGround("ground1",6,6,2,scene);//创建地面 参数: 名称, 宽度, 深度, 细分度, 场景
+            
+            return scene;
+        }
+        
+        var scene=createScene();//调用函数
+        //注册一个重复渲染场景
+        engine.runRenderLoop(function(){
+
             scene.render();
-});
+        })
+          // 监测浏览器/画布大小改变事件
+        window.addEventListener("resize",function()
+        {
+            engine.resize();
+        })
 
-    })
-
-
-</script>
+    
+    
+    </script>
 </body>
 </html>

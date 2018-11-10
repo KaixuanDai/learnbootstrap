@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>基础场景</title>
+
+    <style>
+        html,body{
+            overflow: hidden;
+            width:100%;
+            height: 100%;
+            margin:0;
+            padding: 0;
+        }
+        #renderCanvas{
+            width:100%;
+            height: 100%;
+            touch-action: none;
+        }
+    </style>
+
+
+    <script src="node_modules/babylonjs/babylon.js"></script>
+
+    <script src="node_modules/babylonjs/Oimo.js"></script>
+
+</head>
+<body>
+
+    <canvas id="renderCanvas"></canvas>
+    <script>
+        var canvas=document.getElementById("renderCanvas");
+        var engine =new BABYLON.Engine(canvas,true);
+  
+        var createScene = function () {
+            var scene = new BABYLON.Scene(engine);
+
+            var camera = new BABYLON.ArcRotateCamera("Camera", 3 * Math.PI / 2, Math.PI / 8, 50, BABYLON.Vector3.Zero(), scene);
+
+            camera.attachControl(canvas, true);
+
+            //var light = new BABYLON.HemisphericLight("hemi", new BABYLON.Vector3(0, 1, 0), scene);
+            var light = new BABYLON.DirectionalLight("direct", new BABYLON.Vector3(0, 0, 1), scene);
+
+            //Create a custom mesh  创建一个用户贴图 
+            
+            // var customMesh = new BABYLON.Mesh("custom", scene);
+                
+            //     //Set arrays for positions and indices 设置位置坐标和索引
+            //     // var positions = [-5, 2, -3, -7, -2, -3, -3, -2, -3, 5, 2, 3, 7, -2, 3, 3, -2, 3];
+            //     // var indices = [0, 1, 2, 3, 4, 5];
+            //     // var colors = [1, 0, 0, 1, 1, 0, 0, 1, 1, 0, 0, 1, 0, 1, 0, 0, 0, 1, 1, 0,  0, 1, 0, 1]; //color array added 添加颜色
+
+            //     // //Create a vertexData object 创建多边形的 顶点
+            //     // var vertexData = new BABYLON.VertexData();
+
+            //     // //Assign positions and indices to vertexData 为顶点赋值 和 索引
+            //     // vertexData.positions = positions;
+            //     // vertexData.indices = indices;	
+
+            //     // //Apply vertexData to custom mesh 把顶点放到图层中
+            //     // vertexData.applyToMesh(customMesh);
+
+            //     var positions = [-5, 2, -3, -7, -2, -3, -3, -2, -3, 5, 2, 3, 7, -2, 3, 3, -2, 3];
+            //     var indices = [0, 1, 2, 3, 4, 5];    
+            //     var colors = [1, 0, 0, 1, 1, 0, 0, 1, 1, 0, 0, 1, 0, 1, 0, 0, 0, 1, 1, 0,  0, 1, 0, 1]; //color array added
+
+            //     //Empty array to contain calculated values or normals added
+            //     var normals = [];
+
+            //     //Calculations of normals added
+            //     BABYLON.VertexData.ComputeNormals(positions, indices, normals);
+
+            //     var vertexData = new BABYLON.VertexData();
+
+            //     vertexData.positions = positions;
+            //     vertexData.indices = indices;
+            //     vertexData.normals = normals; //Assignment of normal to vertexData added
+
+            //     vertexData.colors = colors; //Assignment of colors to vertexData
+            //     vertexData.normals = normals; //Assignment of normal to vertexData added
+
+            //     vertexData.applyToMesh(customMesh);
+                                
+                
+            //     /******Display custom mesh in wireframe view to show its creation****************/
+            //     //显示顶点之间的线框
+            //     var mat = new BABYLON.StandardMaterial("mat", scene);
+            //     mat.wireframe = true;
+            //     customMesh.material = mat;
+            //     /*******************************************************************************/
+                
+
+
+                // show axis 显示坐标轴
+                var showAxis = function(size) {
+                    var makeTextPlane = function(text, color, size) {
+                        var dynamicTexture = new BABYLON.DynamicTexture("DynamicTexture", 50, scene, true);
+                        dynamicTexture.hasAlpha = true;
+                        dynamicTexture.drawText(text, 5, 40, "bold 36px Arial", color , "transparent", true);
+                        var plane = new BABYLON.Mesh.CreatePlane("TextPlane", size, scene, true);
+                        plane.material = new BABYLON.StandardMaterial("TextPlaneMaterial", scene);
+                        plane.material.backFaceCulling = false;
+                        plane.material.specularColor = new BABYLON.Color3(0, 0, 0);
+                        plane.material.diffuseTexture = dynamicTexture;
+                        return plane;
+                    };
+            
+                    var axisX = BABYLON.Mesh.CreateLines("axisX", [ 
+                        new BABYLON.Vector3.Zero(), new BABYLON.Vector3(size, 0, 0), new BABYLON.Vector3(size * 0.95, 0.05 * size, 0), 
+                        new BABYLON.Vector3(size, 0, 0), new BABYLON.Vector3(size * 0.95, -0.05 * size, 0)
+                    ], scene);
+                    axisX.color = new BABYLON.Color3(1, 0, 0);
+                    var xChar = makeTextPlane("X", "red", size / 10);
+                    xChar.position = new BABYLON.Vector3(0.9 * size, -0.05 * size, 0);
+                    var axisY = BABYLON.Mesh.CreateLines("axisY", [
+                        new BABYLON.Vector3.Zero(), new BABYLON.Vector3(0, size, 0), new BABYLON.Vector3( -0.05 * size, size * 0.95, 0), 
+                        new BABYLON.Vector3(0, size, 0), new BABYLON.Vector3( 0.05 * size, size * 0.95, 0)
+                    ], scene);
+                    axisY.color = new BABYLON.Color3(0, 1, 0);
+                    var yChar = makeTextPlane("Y", "green", size / 10);
+                    yChar.position = new BABYLON.Vector3(0, 0.9 * size, -0.05 * size);
+                    var axisZ = BABYLON.Mesh.CreateLines("axisZ", [
+                        new BABYLON.Vector3.Zero(), new BABYLON.Vector3(0, 0, size), new BABYLON.Vector3( 0 , -0.05 * size, size * 0.95),
+                        new BABYLON.Vector3(0, 0, size), new BABYLON.Vector3( 0, 0.05 * size, size * 0.95)
+                    ], scene);
+                    axisZ.color = new BABYLON.Color3(0, 0, 1);
+                    var zChar = makeTextPlane("Z", "blue", size / 10);
+                    zChar.position = new BABYLON.Vector3(0, 0.05 * size, 0.9 * size);
+                };
+               // mat.backFaceCulling = false;
+                showAxis(20);
+
+
+                //Array of paths to construct extrusion
+            //     var myShape = [
+            //             new BABYLON.Vector3(0, 5, 0),
+            //             new BABYLON.Vector3(1, 1, 0),
+            //             new BABYLON.Vector3(5, 0, 0),
+            //             new BABYLON.Vector3(1, -1, 0),
+            //             new BABYLON.Vector3(0, -5, 0),
+            //             new BABYLON.Vector3(-1, -1, 0),
+            //             new BABYLON.Vector3(-5, 0, 0),
+            //             new BABYLON.Vector3(-1, 1, 0)
+            //     ];
+                
+            //     myShape.push(myShape[0]);
+                
+            //     var myPath = [
+            //             new BABYLON.Vector3(0, 0, 0),
+            //             new BABYLON.Vector3(0, 0, 2),
+            //             new BABYLON.Vector3(0, 0, 4),
+            //             new BABYLON.Vector3(0, 0, 6),
+            //             new BABYLON.Vector3(0, 0, 8),
+            //             new BABYLON.Vector3(0, 0, 10)
+            //     ];
+                
+            //     var scaling = function(i, distance) {
+            //         return 1/(i+1);
+            //     };
+                
+            //     //Create custom extrusion with updatable parameter set to true for later changes
+            //     var extrusion = BABYLON.MeshBuilder.ExtrudeShapeCustom("star", {shape: myShape, path: myPath, scaleFunction: scaling, sideOrientation: BABYLON.Mesh.DOUBLESIDE, updatable: true}, scene);
+                
+            //     var scaling2 = function(i, distance) {
+            //         return 1 + 0.2*distance;
+            //     };
+                
+            //     var rotation = function(i, distance) {
+            //         return distance * Math.PI / 108;
+            //     };	
+                
+            
+            
+           //Polygon shape in XoZ plane
+            var shape = [ 
+                            new BABYLON.Vector3(4, 0, -4), 
+                            new BABYLON.Vector3(2, 0, 0), 
+                            new BABYLON.Vector3(5, 0, 2), 
+                            new BABYLON.Vector3(1, 0, 2), 
+                            new BABYLON.Vector3(-5, 0, 5), 
+                            new BABYLON.Vector3(-3, 0, 1), 
+                            new BABYLON.Vector3(-4, 0, -4), 
+                            new BABYLON.Vector3(-2, 0, -3), 
+                            new BABYLON.Vector3(2, 0, -3)
+                    ];
+                    
+            //Holes in XoZ plane
+            var holes = [];
+                holes[0] = [ new BABYLON.Vector3(1, 0, -1),
+                        new BABYLON.Vector3(1.5, 0, 0),
+                        new BABYLON.Vector3(1.4, 0, 1),
+                        new BABYLON.Vector3(0.5, 0, 1.5)
+                    ];
+                holes[1] = [ new BABYLON.Vector3(0, 0, -2),
+                        new BABYLON.Vector3(0.5, 0, -1),
+                        new BABYLON.Vector3(0.4, 0, 0),
+                        new BABYLON.Vector3(-1.5, 0, 0.5)
+                    ];
+                
+            var polygon = BABYLON.MeshBuilder.ExtrudePolygon("polygon", {shape:shape, holes:holes, depth: 2, sideOrientation: BABYLON.Mesh.DOUBLESIDE }, scene);
+ 
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            return scene;
+             }
+        
+
+
+
+
+        var scene=createScene();//调用函数
+        //注册一个重复渲染场景
+        engine.runRenderLoop(function(){
+
+            scene.render();
+        })
+          // 监测浏览器/画布大小改变事件
+        window.addEventListener("resize",function()
+        {
+            engine.resize();
+        })
+
+    
+    
+    </script>
+</body>
+</html>

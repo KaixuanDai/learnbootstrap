@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>基础场景</title>
+
+    <style>
+        html,body{
+            overflow: hidden;
+            width:100%;
+            height: 100%;
+            margin:0;
+            padding: 0;
+        }
+        #renderCanvas{
+            width:100%;
+            height: 100%;
+            touch-action: none;
+        }
+    </style>
+    <script src="node_modules/babylonjs/babylon.js"></script>
+    <script src="node_modules/babylonjs/Oimo.js"></script>
+</head>
+<body>
+
+    <canvas id="renderCanvas"></canvas>
+    <script>
+        var canvas=document.getElementById("renderCanvas");
+        var engine =new BABYLON.Engine(canvas,true);
+        
+        // var createScene = function(){
+        //     var scene = new BABYLON.Scene(engine);//场景对象
+        //     scene.clearColor=new BABYLON.Color3(0,1,1);//背景色
+        //     var camera=new BABYLON.FreeCamera("camera1",new BABYLON.Vector3(0,5,-10),scene);//创建和放置自由相机
+        //     camera.setTarget(BABYLON.Vector3.Zero());//将相机朝向对准场景原点
+        //     camera.attachControl(canvas,false);//将相机附加到画布上
+
+        //     var light=new BABYLON.HemisphericLight("light1",new BABYLON.Vector3(0,1,0));//创建平行光源
+        //     light.intensity=0.5;//将光源光线设置为昏暗
+
+        //     var sphere=BABYLON.Mesh.CreateSphere("sphere1",16,2,scene);//添加一个球，名称，细分度，大小，场景
+        //     sphere.position.y=1;//将球上移一半高度
+            
+        //     var box =BABYLON.Mesh.CreateBox("box1",1,scene,false,BABYLON.Mesh.DEFAULTSIDE);//创建一个盒子
+        //     box.position.y=1;
+        //     box.position.x=2;
+        //     box.position.z=-2;
+            
+        //     var plane = BABYLON.Mesh.CreatePlane("plane", 5.0, scene, false, BABYLON.Mesh.DEFAULTSIDE);//创建一个平面
+        //     plane.position.y=2.5;
+        //     plane.position.x=0;
+        //     plane.position.z=2;
+            
+        //     //创建一个盘片 3圆 4正方 5五边形 以此类推
+        //     //参数为: 名字, 半径, 边数, 场景, 可更新否和可选的朝向(参见下面). 如果你需要默认的表现,那么最后两个参数参数可以忽略:
+        //     var disc = BABYLON.Mesh.CreateDisc("disc", 1, 6, scene, false, BABYLON.Mesh.DEFAULTSIDE);
+        //     disc.position.x=-2;
+        //     disc.position.y=1;
+        //     disc.position.z=-1;
+        //     //创建线型网络
+        //     var lines = BABYLON.Mesh.CreateLines("lines", [
+        //         new BABYLON.Vector3(-5, 0, 0),
+        //         new BABYLON.Vector3(5, 0, 0),
+        //         new BABYLON.Vector3(0, 0, -5),
+        //         new BABYLON.Vector3(0, 0, 5)
+        //     ], scene);
+
+
+
+
+        //     var ground = BABYLON.Mesh.CreateGround("ground1",6,6,2,scene);//创建地面 参数: 名称, 宽度, 深度, 细分度, 场景
+            
+        //     return scene;
+        // }
+        var createScene = function () {
+	var scene = new BABYLON.Scene(engine);
+
+	var camera = new BABYLON.ArcRotateCamera("Camera", 3 * Math.PI / 2, Math.PI / 8, 50, BABYLON.Vector3.Zero(), scene);
+
+	camera.attachControl(canvas, true);
+
+	var light = new BABYLON.HemisphericLight("hemi", new BABYLON.Vector3(0, 1, 0), scene);
+
+	//Creation of a box
+	//(name of the box, size, scene)
+	var box = BABYLON.Mesh.CreateBox("box", 6.0, scene);
+
+	//Creation of a sphere 
+	//(name of the sphere, segments, diameter, scene) 
+	var sphere = BABYLON.Mesh.CreateSphere("sphere", 10.0, 10.0, scene);
+
+	//Creation of a plan
+	//(name of the plane, size, scene)
+	var plan = BABYLON.Mesh.CreatePlane("plane", 10.0, scene);
+
+	//Creation of a cylinder
+	//(name, height, diameter, tessellation, scene, updatable)
+	var cylinder = BABYLON.Mesh.CreateCylinder("cylinder", 3, 3, 3, 6, 1, scene, false);
+
+	// Creation of a torus
+	// (name, diameter, thickness, tessellation, scene, updatable)
+	var torus = BABYLON.Mesh.CreateTorus("torus", 5, 1, 10, scene, false);
+
+	// Creation of a knot
+	// (name, radius, tube, radialSegments, tubularSegments, p, q, scene, updatable)
+	var knot = BABYLON.Mesh.CreateTorusKnot("knot", 2, 0.5, 128, 64, 2, 3, scene);
+
+	// Creation of a lines mesh
+	var lines = BABYLON.Mesh.CreateLines("lines", [
+        new BABYLON.Vector3(-10, 0, 0),
+        new BABYLON.Vector3(10, 0, 0),
+        new BABYLON.Vector3(0, 0, -10),
+        new BABYLON.Vector3(0, 0, 10)
+	], scene);
+
+	// Creation of a ribbon
+	// let's first create many paths along a maths exponential function as an example 
+	var exponentialPath = function (p) {
+		var path = [];
+		for (var i = -10; i < 10; i++) {
+			path.push(new BABYLON.Vector3(p, i, Math.sin(p / 3) * 5 * Math.exp(-(i - p) * (i - p) / 60) + i / 3));
+		}
+		return path;
+	};
+	// let's populate arrayOfPaths with all these different paths
+	var arrayOfPaths = [];
+	for (var p = 0; p < 20; p++) {
+		arrayOfPaths[p] = exponentialPath(p);
+	}
+
+	// (name, array of paths, closeArray, closePath, offset, scene)
+	var ribbon = BABYLON.Mesh.CreateRibbon("ribbon", arrayOfPaths, false, false, 0, scene);
+
+
+	// Moving elements
+	box.position = new BABYLON.Vector3(-10, 0, 0);   // Using a vector
+	sphere.position = new BABYLON.Vector3(0, 10, 0); // Using a vector
+	plan.position.z = 10;                            // Using a single coordinate component
+	cylinder.position.z = -10;
+	torus.position.x = 10;
+	knot.position.y = -10;
+	ribbon.position = new BABYLON.Vector3(-10, -10, 20);
+
+	return scene;
+}
+
+
+
+
+        var scene=createScene();//调用函数
+        //注册一个重复渲染场景
+        engine.runRenderLoop(function(){
+
+            scene.render();
+        })
+          // 监测浏览器/画布大小改变事件
+        window.addEventListener("resize",function()
+        {
+            engine.resize();
+        })
+
+    
+    
+    </script>
+</body>
+</html>
