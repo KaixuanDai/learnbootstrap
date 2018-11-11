@@ -20,7 +20,8 @@
             touch-action: none;
         }
     </style>
-    
+        <script src="node_modules/earcut/dist/earcut.min.js"></script>
+
     <script src="node_modules/babylonjs/babylon.js"></script>
     <script src="node_modules/babylonjs/Oimo.js"></script>
 </head>
@@ -32,48 +33,53 @@
         var engine =new BABYLON.Engine(canvas,true);
         
         var createScene = function() {
-  var scene = new BABYLON.Scene(engine);
+            var scene = new BABYLON.Scene(engine);
 
-  // camera
+// camera
   var camera = new BABYLON.ArcRotateCamera("Camera", 0, Math.PI / 3, 20, BABYLON.Vector3.Zero(), scene);
-    camera.attachControl(canvas, true);
+  camera.attachControl(canvas, true);
 
-	var light = new BABYLON.HemisphericLight("hemiLight", new BABYLON.Vector3(10, 10, 0), scene);
-    var light2 = new BABYLON.HemisphericLight("hemiLight2", new BABYLON.Vector3(10, -10, 0), scene);
-    light2.intensity = 0.7;
+  var light = new BABYLON.HemisphericLight("hemiLight", new BABYLON.Vector3(10, 10, 0), scene);
+  var light2 = new BABYLON.HemisphericLight("hemiLight2", new BABYLON.Vector3(10, -10, 0), scene);
+  light2.intensity = 0.7;
 
-	
-	//Polygon shape in XoZ plane
-	var shape = [ 
-					new BABYLON.Vector3(4, 0, -4), 
-                    new BABYLON.Vector3(2, 0, 0), 
-                    new BABYLON.Vector3(5, 0, 2), 
-                    new BABYLON.Vector3(1, 0, 2), 
-                    new BABYLON.Vector3(-5, 0, 5), 
-                    new BABYLON.Vector3(-3, 0, 1), 
-                    new BABYLON.Vector3(-4, 0, -4), 
-                    new BABYLON.Vector3(-2, 0, -3), 
-                    new BABYLON.Vector3(2, 0, -3)
-              ];
-			  
-	//Holes in XoZ plane
-	var holes = [];
-		holes[0] = [ new BABYLON.Vector3(1, 0, -1),
-                 new BABYLON.Vector3(1.5, 0, 0),
-                 new BABYLON.Vector3(1.4, 0, 1),
-                 new BABYLON.Vector3(0.5, 0, 1.5)
-               ];
-		holes[1] = [ new BABYLON.Vector3(0, 0, -2),
-                 new BABYLON.Vector3(0.5, 0, -1),
-                 new BABYLON.Vector3(0.4, 0, 0),
-                 new BABYLON.Vector3(-1.5, 0, 0.5)
-               ];
-		   
-    var polygon = BABYLON.MeshBuilder.ExtrudePolygon("polygon", {shape:shape, holes:holes, depth: 2, sideOrientation: BABYLON.Mesh.DOUBLESIDE }, scene);
+  
+  //Polygon shape in XoZ plane
+  var shape = [ 
+                  new BABYLON.Vector3(4, 0, -4), 
+                  new BABYLON.Vector3(2, 0, 0), 
+                  new BABYLON.Vector3(5, 0, 2), 
+                //   new BABYLON.Vector3(1, 0, 2), 
+                //   new BABYLON.Vector3(-5, 0, 5), 
+                //   new BABYLON.Vector3(-3, 0, 1), 
+                //   new BABYLON.Vector3(-4, 0, -4), 
+                //   new BABYLON.Vector3(-2, 0, -3), 
+                //   new BABYLON.Vector3(2, 0, -3)
+            ];
+            
+  //Holes in XoZ plane
+    var holes = [];
+        holes[0] = [ 
+        new BABYLON.Vector3(4, 0, -4), 
+                  new BABYLON.Vector3(2, 0, 0), 
+                  new BABYLON.Vector3(5, 0, 2), 
+                // new BABYLON.Vector3(1, 0, -1),
+                // new BABYLON.Vector3(1.5, 0, 0),
+                // new BABYLON.Vector3(1.4, 0, 1),
+                //new BABYLON.Vector3(0.5, 0, 1.5)
+                ];
+//       holes[1] = [ new BABYLON.Vector3(0, 0, -2),
+//                new BABYLON.Vector3(0.5, 0, -1),
+//                new BABYLON.Vector3(0.4, 0, 0),
+//                new BABYLON.Vector3(-1.5, 0, 0.5)
+//              ];
+         
+  var polygon = BABYLON.MeshBuilder.ExtrudePolygon("polygon", {shape:shape, holes:holes, depth: 1, sideOrientation: BABYLON.Mesh.DOUBLESIDE }, scene);
 
-    return scene;
+  return scene;
 
-}
+
+        }
         
 
 
