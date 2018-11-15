@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>基础场景</title>
+
+    <style>
+        html,body{
+            overflow: hidden;
+            width:100%;
+            height: 100%;
+            margin:0;
+            padding: 0;
+        }
+        #renderCanvas{
+            width:100%;
+            height: 100%;
+            touch-action: none;
+        }
+    </style>
+        <script src="node_modules/earcut/dist/earcut.min.js"></script>
+
+    <script src="node_modules/babylonjs/babylon.js"></script>
+    <script src="node_modules/babylonjs/Oimo.js"></script>
+</head>
+<body>
+
+    <canvas id="renderCanvas"></canvas>
+    <script>
+        var canvas=document.getElementById("renderCanvas");
+        var engine =new BABYLON.Engine(canvas,true);
+        
+        var createScene = function() {
+           
+        // This creates a basic Babylon Scene object (non-mesh)
+        var scene = new BABYLON.Scene(engine);
+
+        // This creates and positions a free camera (non-mesh)
+        var camera = new BABYLON.FreeCamera("camera1", new BABYLON.Vector3(0, 5, -30), scene);
+
+        // This targets the camera to scene origin
+        camera.setTarget(BABYLON.Vector3.Zero());
+
+        // This attaches the camera to the canvas
+        camera.attachControl(canvas, true);
+
+        // This creates a light, aiming 0,1,0 - to the sky (non-mesh)
+        var light = new BABYLON.HemisphericLight("light1", new BABYLON.Vector3(0, 1, 0), scene);
+
+        // Default intensity is 1. Let's dim the light a small amount
+        light.intensity = 0.7;
+
+
+        // Our built-in 'sphere' shape. Params: name, subdivs, size, scene
+        
+        
+        //创建一个椭圆对象
+        var sphere = BABYLON.Mesh.CreateSphere("sphere1", 16, 2, scene);
+
+        // Move the sphere upward 1/2 its height
+        
+        //设置中心点  设置mesh的中心点 轴心点 用于旋转
+
+        sphere.setPivotMatrix(BABYLON.Matrix.Translation(0, 0, 0));
+        
+        console.log('ssss',sphere.getPivotMatrix());
+        
+        //位置是如何控制的？
+
+        sphere.position.y = 4;
+        sphere.rotation.z = 4;
+        sphere.scaling.x = 2;
+
+        // Our built-in 'ground' shape. Params: name, width, depth, subdivs, scene
+       
+        //地面设置
+        var ground = BABYLON.Mesh.CreateGround("ground1", 6, 6, 2, scene);
+
+        //获取转换矩阵
+        BABYLON.Matrix.getTransforms = function(m,pivotMatrix){
+           
+            var position = new BABYLON.Vector3(0,0,0);
+           
+            var scale = new BABYLON.Vector3(0,0,0);
+           
+            var rotation = new BABYLON.Quaternion(0,0,0,1);
+           
+            m.decompose(scale,rotation,position);	
+           
+            return {position:position,rotation:rotation.toEulerAngles(),scale:scale};
+        };
+        
+        //获取最终转换矩阵
+        function getFinalMatrix(obj){
+            
+            var cm = obj.getWorldMatrix();
+            
+            var pm = obj.getPivotMatrix();
+       
+            // var im = pm.invert();
+           
+        var fm = cm.multiply(pm);
+            
+            fm.m[12] -= pm.m[12];
+            fm.m[13] -= pm.m[13];
+            fm.m[14] -= pm.m[14];
+            console.log('matrixs',cm,pm,fm);
+          
+            return fm;
+        }
+
+
+        sphere.computeWorldMatrix(true);
+        
+        //获取已经建立好的mesh的位置姿态矩阵
+
+        var fm = getFinalMatrix(sphere);
+
+        var nt = BABYLON.Matrix.getTransforms(fm);
+        
+        console.log('nt',nt.position,nt.rotation,nt.scale);
+        
+        console.log('sphere',sphere.position,sphere.rotation,sphere.scaling);
+
+        var red = new BABYLON.Color3(1,0.5,0);
+        
+        var panMat = new BABYLON.StandardMaterial("panMat",scene);
+      
+        panMat.diffuseColor = red;
+        
+        // julian
+        
+        //把计算出来的位置矩阵赋给另一个mesh 检查是否正确
+        var sphere2 = BABYLON.Mesh.CreateSphere("sphere1", 16, 2, scene);
+        sphere2.material = panMat;
+        
+        sphere2.position = nt.position;
+        sphere2.rotation = nt.rotation;
+        
+        sphere2.scaling = nt.scale;
+        
+        //sphere2.position.x -= 2;
+
+        
+        return scene;
+
+        }
+        
+
+
+
+
+        var scene=createScene();//调用函数
+        //注册一个重复渲染场景
+        engine.runRenderLoop(function(){
+
+            scene.render();
+        })
+          // 监测浏览器/画布大小改变事件
+        window.addEventListener("resize",function()
+        {
+            engine.resize();
+        })
+
+    
+    
+    </script>
+</body>
+</html>
