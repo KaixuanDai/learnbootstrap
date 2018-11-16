@@ -88,6 +88,7 @@
 
     local_pos = new BABYLON.Vector3(1, 0.5, 1);
    
+    // 根据转换矩阵计算映射坐标
     box.position = BABYLON.Vector3.TransformCoordinates(local_pos, matrix);
     
     // var result=new  BABYLON.Vector3(0,0,0);
