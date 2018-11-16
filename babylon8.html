@@ -74,11 +74,11 @@
     //matrix = box.getWorldMatrix();
     var matrix = BABYLON.Matrix.Compose(
       
-        new BABYLON.Vector3(1,1,1),
+        new BABYLON.Vector3(1,1,1),//需要变动的就是x z 轴的比例，要根据 交互区域 与平面的大小决定每个方向上的缩放比例
         
-        BABYLON.Quaternion.Identity(),
+        BABYLON.Quaternion.Identity(),//旋转矩阵，暂不考虑，为单位阵
         
-        new BABYLON.Vector3(0,0,0),
+        new BABYLON.Vector3(0,0,0),//平移向量，构建平移矩阵
     );
 
 
