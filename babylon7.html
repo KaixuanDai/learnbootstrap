@@ -54,6 +54,7 @@
     faceColors[5] = BABYLON.Color3.Black();
 
     var box = BABYLON.MeshBuilder.CreateBox("Box", { faceColors: faceColors }, scene);
+    
     var small = BABYLON.MeshBuilder.CreateBox("Small", { width: 0.25, depth: 0.25, height: 0.75, faceColors: faceColors }, scene);
 
     var localOrigin = localAxes(2);
@@ -64,9 +65,12 @@
     var local_pos;
     var y = 0;
     scene.registerAfterRender(function () {
-        box.rotate(BABYLON.Axis.Y, Math.PI / 150, BABYLON.Space.LOCAL);
-        box.rotate(BABYLON.Axis.X, Math.PI / 200, BABYLON.Space.LOCAL);
+        
+        //box.rotate(BABYLON.Axis.Y, Math.PI / 150, BABYLON.Space.LOCAL);
+        //box.rotate(BABYLON.Axis.X, Math.PI / 200, BABYLON.Space.LOCAL);
+       
         box.translate(new BABYLON.Vector3(-1, -1, -1).normalize(), 0.001, BABYLON.Space.WORLD)
+        
         small.rotationQuaternion = box.rotationQuaternion;
         matrix = box.getWorldMatrix();
         y += 0.001;
@@ -75,7 +79,9 @@
 
     })
 
-    /****************************************************************/
+   
+   
+   /****************************************************************/
 
     // show axis
     var showAxis = function (size) {
