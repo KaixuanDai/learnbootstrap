@@ -79,6 +79,7 @@
         BABYLON.Quaternion.Identity(),//旋转矩阵，暂不考虑，为单位阵
         
         new BABYLON.Vector3(0,0,0),//平移向量，构建平移矩阵
+    
     );
 
 
@@ -96,7 +97,8 @@
     // box.position = result;
 
 
-
+    //scene.registerAfterRender    对每一帧进行渲染 实现动态变化
+    
     //scene.registerAfterRender(function () {
         
         //box.rotate(BABYLON.Axis.Y, Math.PI / 150, BABYLON.Space.LOCAL);
