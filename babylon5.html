@@ -24,6 +24,11 @@
 
     <script src="node_modules/babylonjs/babylon.js"></script>
     <script src="node_modules/babylonjs/Oimo.js"></script>
+
+    <script src="https://preview.babylonjs.com/gui/babylon.gui.js"></script>
+    <script src="https://preview.babylonjs.com/gui/babylon.gui.min.js"></script>
+
+
 </head>
 <body>
 
@@ -45,36 +50,146 @@
 
   
   //Polygon shape in XoZ plane
-  var shape = [ 
-                  new BABYLON.Vector3(4, 0, -4), 
-                  new BABYLON.Vector3(2, 0, 0), 
-                  new BABYLON.Vector3(5, 0, 2), 
-                //   new BABYLON.Vector3(1, 0, 2), 
-                //   new BABYLON.Vector3(-5, 0, 5), 
-                //   new BABYLON.Vector3(-3, 0, 1), 
-                //   new BABYLON.Vector3(-4, 0, -4), 
-                //   new BABYLON.Vector3(-2, 0, -3), 
-                //   new BABYLON.Vector3(2, 0, -3)
+  var shapeBox = [ 
+                  new BABYLON.Vector3(0, 0, 0),
+                  new BABYLON.Vector3(1, 0, 0), 
+                  new BABYLON.Vector3(1, 0, 1), 
+                  new BABYLON.Vector3(0, 0, 1), 
+
             ];
+
+    var shapeTri = [ 
+                  new BABYLON.Vector3(0, 0, 0),
+                  new BABYLON.Vector3(1, 0, 0), 
+                  new BABYLON.Vector3(0.5, 0, 1), 
+
+            ];
+
+
             
   //Holes in XoZ plane
-    var holes = [];
-        holes[0] = [ 
-        new BABYLON.Vector3(4, 0, -4), 
-                  new BABYLON.Vector3(2, 0, 0), 
-                  new BABYLON.Vector3(5, 0, 2), 
-                // new BABYLON.Vector3(1, 0, -1),
-                // new BABYLON.Vector3(1.5, 0, 0),
-                // new BABYLON.Vector3(1.4, 0, 1),
-                //new BABYLON.Vector3(0.5, 0, 1.5)
-                ];
+    // var holes = [];
+    //     holes[0] = [ 
+    //     new BABYLON.Vector3(4, 0, -4), 
+    //               new BABYLON.Vector3(2, 0, 0), 
+    //               new BABYLON.Vector3(5, 0, 2), 
+    //             // new BABYLON.Vector3(1, 0, -1),
+    //             // new BABYLON.Vector3(1.5, 0, 0),
+    //             // new BABYLON.Vector3(1.4, 0, 1),
+    //             //new BABYLON.Vector3(0.5, 0, 1.5)
+    //             ];
 //       holes[1] = [ new BABYLON.Vector3(0, 0, -2),
 //                new BABYLON.Vector3(0.5, 0, -1),
 //                new BABYLON.Vector3(0.4, 0, 0),
 //                new BABYLON.Vector3(-1.5, 0, 0.5)
 //              ];
          
-  var polygon = BABYLON.MeshBuilder.ExtrudePolygon("polygon", {shape:shape, holes:holes, depth: 1, sideOrientation: BABYLON.Mesh.DOUBLESIDE }, scene);
+//   var polygon = BABYLON.MeshBuilder.ExtrudePolygon("polygon", {shape:shape, holes:holes, depth: 1, sideOrientation: BABYLON.Mesh.DOUBLESIDE }, scene);
+  
+  
+  
+  //var ground = BABYLON.Mesh.CreateGround("ground1",12,12,2,scene);//创建地面 参数: 名称, 宽度, 深度, 细分度, 场景
+  
+  var faceColors = [];
+    faceColors[0] = BABYLON.Color3.Red();
+    faceColors[1] = BABYLON.Color3.Red();
+    faceColors[2] = BABYLON.Color3.Red();
+    faceColors[3] = BABYLON.Color3.Red();
+    faceColors[4] = BABYLON.Color3.Red();
+    faceColors[5] = BABYLON.Color3.Red();
+
+//   var box = BABYLON.MeshBuilder.ExtrudePolygon("box", {shape:shapeBox,  depth: 0.1,faceColors:faceColors, sideOrientation: BABYLON.Mesh.DOUBLESIDE}, scene);
+  
+//  var tri = BABYLON.MeshBuilder.ExtrudePolygon("tri", {shape:shapeTri,  depth: 0.1,faceColors:faceColors, sideOrientation: BABYLON.Mesh.DOUBLESIDE}, scene);
+//   tri.dispose(true,true);
+//   tri.releaseSubMeshes();
+//   tri=BABYLON.MeshBuilder.ExtrudePolygon("tri", {shape:shapeBox,  depth: 0.1,faceColors:faceColors, sideOrientation: BABYLON.Mesh.DOUBLESIDE}, scene);
+  
+//  console.log(tri);
+//var disc = BABYLON.MeshBuilder.CreateDisc("disc", {radius: 3,depth:1}, scene); // makes a triangle
+
+var disc = BABYLON.MeshBuilder.CreateDisc("1", {radius: 1,depth: 1, faceColors:faceColors,sideOrientation: BABYLON.Mesh.BACKSIDE}, scene);
+// var cylinder = BABYLON.Mesh.CreateCylinder("cylinder", 0.1, 3, 3, 100, 1, scene, false);
+
+// var cone = BABYLON.MeshBuilder.CreateCylinder("cone", {height:0.1,diameterTop: 1, tessellation: 99, }, scene);
+
+
+    var myMaterial = new BABYLON.StandardMaterial("myMaterial", scene);
+
+    myMaterial.diffuseColor = new BABYLON.Color3(1, 0, 1);
+    myMaterial.specularColor = new BABYLON.Color3(0.5, 0.6, 0.87);
+    myMaterial.emissiveColor = new BABYLON.Color3(1, 1, 1);
+    myMaterial.ambientColor = new BABYLON.Color3(0.23, 0.98, 0.53);
+
+
+    var ground = BABYLON.Mesh.CreateGround("ground1",30,30,2,scene);//创建地面 参数: 名称, 宽度, 深度, 细分度, 场景
+    
+    ground.material = myMaterial;
+    
+    //Create dynamic texture
+    var textureResolution = 1024;
+	var textureGround = new BABYLON.DynamicTexture("dynamic texture", {width:512, height:256}, scene);   
+	var textureContext = textureGround.getContext();
+	
+	var materialGround = new BABYLON.StandardMaterial("Mat", scene);    				
+	materialGround.diffuseTexture = textureGround;
+	ground.material = materialGround;
+	
+    //Add text to dynamic texture
+    var font = "bold 44px monospace";
+    textureGround.drawText("Box", 75, 135, font, "green", "white", true, true);
+	
+    var materialSphere1 = new BABYLON.StandardMaterial("texture1", scene);
+    ground.material = materialSphere1;
+    materialSphere1.alpha = 1;
+    materialSphere1.diffuseColor = new BABYLON.Color3(1.0, 1.0, 1.0);
+    materialSphere1.diffuseTexture = new BABYLON.Texture("grass.png", scene);
+
+
+
+    var skybox = BABYLON.Mesh.CreateBox("skyBox", 100.0, scene);
+    var skyboxMaterial = new BABYLON.StandardMaterial("skyBox", scene);
+    skyboxMaterial.backFaceCulling = false;
+    skyboxMaterial.reflectionTexture = new BABYLON.CubeTexture("3", scene);
+    skyboxMaterial.reflectionTexture.coordinatesMode = BABYLON.Texture.SKYBOX_MODE;
+    skyboxMaterial.diffuseColor = new BABYLON.Color3(0, 0, 0);
+    skyboxMaterial.specularColor = new BABYLON.Color3(0, 0, 0);
+    skyboxMaterial.disableLighting = true;
+    skybox.material = skyboxMaterial;
+    
+    
+    var advancedTexture = BABYLON.GUI.AdvancedDynamicTexture.CreateFullscreenUI("ui1");
+
+    var createLabel = function(mesh) {
+        
+        var label = new BABYLON.GUI.Rectangle("label for " + mesh.name);
+        
+        label.background = "green"
+        label.height = "30px";
+        label.alpha = 0.5;
+        label.width = "600px";
+        label.height = "100px";
+
+        label.cornerRadius = 20;
+        label.thickness = 1;
+        label.linkOffsetY = 30;
+        
+        advancedTexture.addControl(label); 
+       label.linkWithMesh(mesh);
+
+        var text1 = new BABYLON.GUI.TextBlock();
+        text1.text = "你好！！！！";
+        text1.color = "red";
+        label.addControl(text1);  
+    }  
+
+    disc.position.x=-35;
+    disc.position.y=0;
+    disc.position.z=0;
+    disc.isVisible=false;
+    createLabel(disc);
+
+
 
   return scene;
 
@@ -97,6 +212,7 @@
             engine.resize();
         })
 
+    
     
     
     </script>
